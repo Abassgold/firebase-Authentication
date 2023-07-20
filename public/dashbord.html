@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+    <button onclick="logout()">SignOut</button>
+    <div id="display"></div>
+  <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyDQs-6fzltmHXWg9DGWbV2N2NVS0KKPMak",
+    authDomain: "authentication-b0980.firebaseapp.com",
+    projectId: "authentication-b0980",
+    storageBucket: "authentication-b0980.appspot.com",
+    messagingSenderId: "677193902030",
+    appId: "1:677193902030:web:65cfd3d8efa1c286bd2d9f"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      const uid = user.uid;
+      console.log(user);
+      display.innerHTML = `
+      <div>Name: ${user.displayName}</div>
+      <div>Name: ${user.email}</div>
+      <img src="${user.photoURL}" alt="">
+      `
+      // ...
+    } else {
+      // User is signed out
+      console.log("User not found");
+      window.location.href = `index.html`
+    }
+  });
+
+  const logout =()=>{
+    signOut(auth).then(() => {
+        console.log('Sign-out successful.')
+      window.location.href = `index.html`
+      }).catch((error) => {
+        // An error happened.
+        console.log(error);
+      });
+      Was
+  }
+  window.logout = logout;
+
+</script>
+</body>
+</html>
