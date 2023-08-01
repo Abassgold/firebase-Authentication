@@ -1,61 +1,224 @@
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <script src="js/bootstrap.js"></script>
+  <title>Dashborad</title>
 </head>
+
 <body>
-    <button onclick="logout()">SignOut</button>
-    <div id="display"></div>
+  <!-- STORSGA START -->
+  <div class="form-floating mb-2">
+    <input type="text" class="form-control" placeholder="Movie Tittle" id="movieTittle" />
+    <label class="form-label" for="form12">Movie Tittle</label>
+  </div>
+  <div class="form-floating mb-2">
+    <input type="text" class="form-control" placeholder="Movie Genre" id="movieGenre" />
+    <label class="form-label" for="form12">Movie Genre</label>
+  </div>
+  <div class="mb-2">
+    <input type="file" class="form-control" placeholder="Movie file" id="movieFile" />
+    <label class="form-label" for="form12">Movie file</label>
+  </div>
+  <div class="">
+    <button class="btn btn-dark" onclick="Movie()">Upload</button>
+  </div>
+  </div>
+  <div id="showProgress"></div>
+  <!-- STORAGE ENDS -->
+  <!-- <section style="background-color: #eee;">
+    <div class="container py-5">
+  
+      <div class="row d-flex justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-6">
+  
+          <div class="card" id="chat2">
+            <div class="card-header d-flex justify-content-between align-items-center p-3">
+              <h5 class="mb-0">Chat</h5>
+              <button type="button" class="btn btn-primary btn-sm" data-mdb-ripple-color="dark">Let's Chat
+                App</button>
+            </div>
+            <div class="card-body" data-mdb-perfect-scrollbar="true" style="position: relative; height: 400px">
+  
+              <div class="d-flex flex-row justify-content-start">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
+                  alt="avatar 1" style="width: 45px; height: 100%;">
+                <div>
+                  <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;" id="para">Hi</p>
+                  <p class="small ms-3 mb-3 rounded-3 text-muted" id="cloc">23:58</p>
+                </div>
+              </div>
+  
+              <div class="divider d-flex align-items-center mb-4">
+                <p class="text-center mx-3 mb-0" style="color: #a2aab7;">Today</p>
+              </div>
+  
+              <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+                <div>
+                  <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">Hiii, I'm good.</p>
+                  <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">00:06</p>
+                </div>
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp"
+                  alt="avatar 1" style="width: 45px; height: 100%;">
+              </div>
+            </div>
+            <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
+                alt="avatar 3" style="width: 40px; height: 100%;">
+              <input type="text" class="form-control form-control-lg" id="input"
+                placeholder="Type message">
+              <a class="ms-1 text-muted" href="#!"><i class="fas fa-paperclip"></i></a>
+              <a class="ms-3 text-muted" href="#!"><i class="fas fa-smile"></i></a>
+              <button onclick="submitTodo()">click</button>
+              <a class="ms-3" href="#!"><i class="fas fa-paper-plane"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+
+  <div class="conatiner-fluid col-7 mt-lg-5 shadow p-3 my-3 mx-auto">
+    <div class="form-floating mb-2">
+      <input type="text" class="form-control" id="input" placeholder="enter">
+      <label for="input" class="form-label">Enter your input</label>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-success" onclick="submitTodo()">Submitt</button>
+    </div>
+    <div id="show"></div>
+  </div>
+  <button onclick="logout()">SignOut</button>
+  <div id="display"></div>
   <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-  const firebaseConfig = {
-    apiKey: "AIzaSyDQs-6fzltmHXWg9DGWbV2N2NVS0KKPMak",
-    authDomain: "authentication-b0980.firebaseapp.com",
-    projectId: "authentication-b0980",
-    storageBucket: "authentication-b0980.appspot.com",
-    messagingSenderId: "677193902030",
-    appId: "1:677193902030:web:65cfd3d8efa1c286bd2d9f"
-  };
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+    import { getStorage, ref as setRef, uploadBytesResumable } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyDQs-6fzltmHXWg9DGWbV2N2NVS0KKPMak",
+      authDomain: "authentication-b0980.firebaseapp.com",
+      projectId: "authentication-b0980",
+      storageBucket: "authentication-b0980.appspot.com",
+      messagingSenderId: "677193902030",
+      databaseURL: "https://authentication-b0980-default-rtdb.firebaseio.com",
+      appId: "1:677193902030:web:65cfd3d8efa1c286bd2d9f"
+    };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+    const storage = getStorage(app);
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
-      const uid = user.uid;
-      console.log(user);
-      display.innerHTML = `
+    let todoInndex = 0;
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/auth.user
+        const uid = user.uid;
+        console.log(user);
+        display.innerHTML = `
       <div>Name: ${user.displayName}</div>
       <div>Name: ${user.email}</div>
       <img src="${user.photoURL}" alt="">
       `
-      // ...
-    } else {
-      // User is signed out
-      console.log("User not found");
-      window.location.href = `index.html`
-    }
-  });
+      } else {
+        // User is signed out
+        console.log("User not found");
+        window.location.href = `index.html`
+      }
+    });
 
-  const logout =()=>{
-    signOut(auth).then(() => {
+    const logout = () => {
+      signOut(auth).then(() => {
         console.log('Sign-out successful.')
-      window.location.href = `index.html`
+        window.location.href = `index.html`
       }).catch((error) => {
         // An error happened.
         console.log(error);
       });
-      Was
-  }
-  window.logout = logout;
+    }
+    window.logout = logout;
 
-</script>
+    function submitTodo() {
+      let dbref = ref(database, `allTodos/${todoInndex}`)
+      let dates = new Date();
+      let todos = {
+        todoName: input.value,
+        time: dates.toLocaleTimeString(),
+        date: dates.toLocaleDateString(),
+        username: auth.currentUser.displayName
+      }
+      console.log(todos)
+      set(dbref, todos);
+
+    }
+    window.submitTodo = submitTodo
+
+    let newRef = ref(database, "allTodos")
+    onValue(newRef, function (snapshot) {
+      const data = snapshot.val();
+      if (data) {
+        console.log(data)
+        todoInndex = data.length;
+        data.map((user, index) => {
+          show.innerHTML = ''
+          para.innerHTML = ''
+          para.innerHTML += `
+          ${user.todoName}
+          `
+          cloc = `
+          ${user.date}
+          `
+          show.innerHTML += `
+        <div>${index + 1}</div>
+        <small>${user.todoName}</small>
+        <small>${user.time}</small>
+        <small>${user.date}</small>
+        <small>${user.username}</small>
+        `
+        })
+      }
+      else {
+        todoInndex = 0;
+        show.innerHTML = `
+         <div>No items yet</div>
+         `
+      }
+
+    })
+
+    const Movie = function () {
+      const movieObj = {
+        movie: movieTittle.value,
+        genre: movieGenre.value,
+        file: movieFile.files
+      }
+      console.log(movieObj.file);
+      let theMedia = movieObj.file[0];
+      let mediaName = movieObj.file[0].name;
+      const imagesRef = setRef(storage, `images/${mediaName}`);
+      const uploadTask = uploadBytesResumable(imagesRef, theMedia);
+      uploadTask.on('state_changed', (snapshot) => {
+        console.log(snapshot);
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log(progress);
+        let convertedProgress = Math.round(progress)
+        showProgress.innerHTML = `
+            <small>The upload is ${convertedProgress}% complete</small>
+         `
+      })
+    }
+    window.Movie = Movie;
+
+  </script>
 </body>
+
 </html>
